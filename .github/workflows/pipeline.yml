@@ -23,8 +23,9 @@ jobs:
     - uses: actions/checkout@v2
 
     # Setup Node
-    - name: Setup Node
-      uses: actions/setup-node@v1
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v3
+      
     
     # Install SFDX CLI
     - name: Install SFDX CLI
