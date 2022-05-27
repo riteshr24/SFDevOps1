@@ -81,7 +81,7 @@ jobs:
       if: ${{ env.APEX_TESTS != 'all' }}
       run: |
           echo ${{env.APEX_TESTS}}
-          sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+          sfdx force:source:deploy -p "changed-sources/force-app" -u rishu24r_1@gmail.com --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
      
      # we run all tests
     - name: 'Check-only deploy delta changes - run all tests'
