@@ -63,10 +63,7 @@ jobs:
     # Convert to Deploy Source
     - name: Convert to Deploy Source
       run: sfdx force:source:convert -r ./force-app -d ./toDeploy
-    
-    # Run Validation of Deploy Source
-    - name: Run Validation on Deploy Source
-      run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
+  
       
      # we run all tests
     - name: 'Check-only deploy delta changes - run all tests'
@@ -75,7 +72,9 @@ jobs:
         
     # Deploy
     - name : Deploy to SF Org
-      run: sfdx force:mdapi:deploy -l RunLocalTests -d ./toDeploy -u prod -w 10
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u rishu24r_1@gmail.com --testlevel RunLocalTests  --json
+        
     #Deploy Destructive  
     - name: 'Deploy destructive changes (if any)'
       run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u rishu24r_1@gmail.com --ignorewarnings 
