@@ -91,5 +91,5 @@ jobs:
       run: sfdx force:mdapi:deploy -l RunLocalTests -d ./toDeploy -u prod -w 10
     #Deploy Destructive  
     - name: 'Deploy destructive changes (if any)'
-      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u rishu24r_1@gmail.com --ignorewarnings 
       
