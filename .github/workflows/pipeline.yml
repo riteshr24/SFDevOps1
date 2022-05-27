@@ -9,7 +9,15 @@ on:
     branches: [ master ]
     paths:
         - 'force-app/**'
-
+        
+env:
+  ## Sets environment variable
+  APEX_TESTS : all  
+  USERNAME : rishu24r_1@gmail.com
+  INSTANCE_URL: https://login.salesforce.com
+  CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
+  
+  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
@@ -45,10 +53,6 @@ jobs:
 
     # Authorize SF Org
     - name: Authorize SF Org
-      env:
-        CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
-        USERNAME: rishu24r_1@gmail.com
-        INSTANCE_URL: https://login.salesforce.com
       run: sfdx force:auth:jwt:grant --clientid $CLIENT_ID --jwtkeyfile ./buildfiles/server.key --username $USERNAME --instanceurl $INSTANCE_URL -a prod
       
     - name: 'Create delta packages for new, modified or deleted metadata'
