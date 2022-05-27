@@ -12,7 +12,7 @@ on:
         
 env:
   ## Sets environment variable
-  APEX_TESTS : all  
+  APEX_TESTS : SampleFailingTestClass
   USERNAME : rishu24r_1@gmail.com
   INSTANCE_URL: https://login.salesforce.com
   CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
@@ -76,9 +76,16 @@ jobs:
     - name: Convert to Deploy Source
       run: sfdx force:source:convert -r ./force-app -d ./toDeploy
   
-      
+    #run pre-defined tests
+    - name: 'Check-only deploy delta changes - run specified tests'     
+      if: ${{ env.APEX_TESTS != 'all' }}
+      run: |
+          echo ${{env.APEX_TESTS}}
+          sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+     
      # we run all tests
     - name: 'Check-only deploy delta changes - run all tests'
+      if: ${{ env.APEX_TESTS == 'all' }}
       run: |
         sfdx force:source:deploy -p "changed-sources/force-app" -u rishu24r_1@gmail.com --checkonly --testlevel RunLocalTests  --json
         
