@@ -13,15 +13,6 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  pmd:
-  
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: sfdx-actions/setup-pmd@v1
-      - name: run-pmd
-        run: pmd -d ./force-app/main/default/classes -R .ci/pmd-apex.xml -f text
-
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -43,6 +34,18 @@ jobs:
     # Install SFDX CLI
     - name: Install SFDX CLI
       run: npm install sfdx-cli --global
+      
+    - name: 'Installing sfdx git delta'
+      run: | 
+          echo y | sfdx plugins:install sfdx-git-delta
+          sfdx plugins 
+   # Install java as it is required for the next step
+    - name: 'Installing java'
+      run: sudo apt-get install openjdk-8-jdk
+
+  # Install SFDX scanner
+    - name: 'Installing SFDX scanner'
+      run: sfdx plugins:install @salesforce/sfdx-scanner
 
     # Authorize SF Org
     - name: Authorize SF Org
@@ -51,6 +54,23 @@ jobs:
         USERNAME: rishu24r_1@gmail.com
         INSTANCE_URL: https://login.salesforce.com
       run: sfdx force:auth:jwt:grant --clientid $CLIENT_ID --jwtkeyfile ./buildfiles/server.key --username $USERNAME --instanceurl $INSTANCE_URL -a prod
+      
+    - name: 'Create delta packages for new, modified or deleted metadata'
+      run: | 
+          mkdir changed-sources
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+          
+    - name: 'Scan code'
+      run: |
+          cd changed-sources
+          sfdx scanner:run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
+          cd ..
+          
+    # upload the .sarif file 
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: changed-sources/apexScanResults.sarif
 
     # Convert to Deploy Source
     - name: Convert to Deploy Source
@@ -59,7 +79,17 @@ jobs:
     # Run Validation of Deploy Source
     - name: Run Validation on Deploy Source
       run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
-    
+      
+     # we run all tests
+    - name: 'Check-only deploy delta changes - run all tests'
+      if: ${{ env.APEX_TESTS == 'all' }}
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
+        
     # Deploy
     - name : Deploy to SF Org
       run: sfdx force:mdapi:deploy -l RunLocalTests -d ./toDeploy -u prod -w 10
+    #Deploy Destructive  
+    - name: 'Deploy destructive changes (if any)'
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+      
