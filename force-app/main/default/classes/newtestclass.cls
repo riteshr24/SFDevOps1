@@ -1,5 +1,5 @@
 @isTest
-public class SampleFailingTestClass1 {
+public class newtestclass {
 
     public static testmethod void failingTest() {
         Account acc = new Account(Name= 'fred2');
