@@ -90,13 +90,13 @@ jobs:
         sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json
         
     # Deploy with specified tests run
-    - name : Deploy to SF Org
+    - name : Deploy to SF Org with spedified tests run
       if: ${{ env.APEX_TESTS != 'all' }}
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests  --json
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
         
     # Deploy with All tests run
-    - name : Deploy to SF Org
+    - name : Deploy to SF Org with all tests run
       if: ${{ env.APEX_TESTS == 'all' }}
       run: |
         sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json
