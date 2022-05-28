@@ -81,20 +81,27 @@ jobs:
       if: ${{ env.APEX_TESTS != 'all' }}
       run: |
           echo ${{env.APEX_TESTS}}
-          sfdx force:source:deploy -p "changed-sources/force-app" -u rishu24r_1@gmail.com --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
      
      # we run all tests
     - name: 'Check-only deploy delta changes - run all tests'
       if: ${{ env.APEX_TESTS == 'all' }}
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u rishu24r_1@gmail.com --checkonly --testlevel RunLocalTests  --json
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json
         
-    # Deploy
+    # Deploy with specified tests run
     - name : Deploy to SF Org
+      if: ${{ env.APEX_TESTS != 'all' }}
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u rishu24r_1@gmail.com --testlevel RunLocalTests  --json
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests  --json
+        
+    # Deploy with All tests run
+    - name : Deploy to SF Org
+      if: ${{ env.APEX_TESTS == 'all' }}
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json
         
     #Deploy Destructive  
     - name: 'Deploy destructive changes (if any)'
-      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u rishu24r_1@gmail.com --ignorewarnings 
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME  --ignorewarnings 
       
