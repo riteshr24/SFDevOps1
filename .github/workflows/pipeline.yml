@@ -88,11 +88,7 @@ jobs:
     - name: 'Check-only deploy delta changes - run all tests'
       if: ${{ env.APEX_TESTS == 'all' }}
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json
-        
-    #Deploy Destructive  
-    - name: 'Deploy destructive changes (if any)'
-      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME  --ignorewarnings 
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
         
     # Deploy with specified tests run
     - name : Deploy to SF Org with spedified tests run
@@ -105,4 +101,13 @@ jobs:
       if: ${{ env.APEX_TESTS == 'all' }}
       run: |
         sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json
+        
+    #Check Destructive  
+    - name: 'Check destructive changes (if any)'
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME --checkonly --ignorewarnings
+    
+    #Deploy Destructive
+    - name: 'Check destructive changes (if any)'
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME --ignorewarnings
+    
            
