@@ -12,7 +12,8 @@ on:
         
 env:
   ## Sets environment variable
-  APEX_TESTS : SampleFailingTestClass,newtestclass
+  #for APEX_TESTS , specific test classes names can be set up (comma separated). This will enable faster deployments.
+  APEX_TESTS : all
   USERNAME : rishu24r_1@gmail.com
   INSTANCE_URL: https://login.salesforce.com
   CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
@@ -68,7 +69,7 @@ jobs:
           
     # upload the .sarif file 
     - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: changed-sources/apexScanResults.sarif
 
