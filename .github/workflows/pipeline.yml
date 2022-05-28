@@ -12,7 +12,7 @@ on:
         
 env:
   ## Sets environment variable
-  APEX_TESTS : SampleFailingTestClass
+  APEX_TESTS : SampleFailingTestClass,newtestclass
   USERNAME : rishu24r_1@gmail.com
   INSTANCE_URL: https://login.salesforce.com
   CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
