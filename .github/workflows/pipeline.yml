@@ -73,9 +73,6 @@ jobs:
       with:
         sarif_file: changed-sources/apexScanResults.sarif
 
-    # Convert to Deploy Source
-    - name: Convert to Deploy Source
-      run: sfdx force:source:convert -r ./force-app -d ./toDeploy
   
     #run pre-defined tests
     - name: 'Check-only deploy delta changes - run specified tests'     
