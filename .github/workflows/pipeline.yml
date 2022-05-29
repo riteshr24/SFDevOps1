@@ -7,6 +7,9 @@ name: Deploy to Salesforce Pipeline
 on:
   push:
     branches: [ master ]
+ # We only care about changes to the force-app directory, which is the
+ # root directory of the sfdx project. This prevents the job from running
+ # when changing non-salesforce files (like this yml file).
     paths:
         - 'force-app/**'
         
@@ -18,7 +21,7 @@ env:
   INSTANCE_URL: https://login.salesforce.com
   CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
   
-  
+# Jobs to be executed when the above conditions are met  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
@@ -29,6 +32,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    # Make sure to specify fetch-depth:0. This allows us to
+    # access previous commits that have been pushed to the repository.
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
@@ -74,30 +79,7 @@ jobs:
         sarif_file: changed-sources/apexScanResults.sarif
 
   
-    #run pre-defined tests
-    - name: 'Check-only deploy delta changes - run specified tests'     
-      if: ${{ env.APEX_TESTS != 'all' }}
-      run: |
-          echo ${{env.APEX_TESTS}}
-          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json --ignorewarnings
-     
-     # validate with run all local tests
-    - name: 'Check-only deploy delta changes - run all tests'
-      if: ${{ env.APEX_TESTS == 'all' }}
-      run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json --ignorewarnings
-        
-    # Deploy with specified tests run
-    - name : deploy delta changes with specified tests run
-      if: ${{ env.APEX_TESTS != 'all' }}
-      run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json --ignorewarnings
-        
-    # Deploy with All tests run
-    - name : deploy delta changes with all tests run
-      if: ${{ env.APEX_TESTS == 'all' }}
-      run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json --ignorewarnings
+
         
     #Check Destructive  
     - name: 'Check destructive changes (if any)'
