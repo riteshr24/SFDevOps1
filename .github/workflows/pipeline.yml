@@ -77,7 +77,31 @@ jobs:
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: changed-sources/apexScanResults.sarif
-
+        
+     #run pre-defined tests
+    - name: 'Check-only deploy delta changes - run specified tests'     
+      if: ${{ env.APEX_TESTS != 'all' }}
+      run: |
+          echo ${{env.APEX_TESTS}}
+          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json --ignorewarnings
+     
+     # validate with run all local tests
+    - name: 'Check-only deploy delta changes - run all tests'
+      if: ${{ env.APEX_TESTS == 'all' }}
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json --ignorewarnings
+        
+    # Deploy with specified tests run
+    - name : deploy delta changes with specified tests run
+      if: ${{ env.APEX_TESTS != 'all' }}
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json --ignorewarnings
+        
+    # Deploy with All tests run
+    - name : deploy delta changes with all tests run
+      if: ${{ env.APEX_TESTS == 'all' }}
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json --ignorewarnings
   
 
         
