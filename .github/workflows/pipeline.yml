@@ -82,7 +82,7 @@ jobs:
      # validate with specified  tests
     - name: 'Check-only deploy delta changes - run specified tests'     
       if: |
-          $APEX_TESTS != 'all' && $DEPLOYMENT_TYPE == 'delta'
+          env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'delta'
       run: |
           echo ${{env.APEX_TESTS}}
           sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
