@@ -79,6 +79,58 @@ jobs:
       with:
         sarif_file: changed-sources/apexScanResults.sarif
         
+      # validate with specified  tests
+    - name: 'validate delta changes - run specified tests'     
+      if: |
+          env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'delta'
+      run: |
+          echo ${{env.APEX_TESTS}}
+          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+          
+    - name: 'validate branch - run specified tests' 
+      if: | 
+         env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'all'
+      run: |
+          sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json 
+          
+     # validate with run all local tests
+    - name: 'validate delta changes - run all tests'
+      if: |
+         env.APEX_TESTS == 'all' &&  env.DEPLOYMENT_TYPE == 'delta'
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
+        
+    - name: 'validate branch- run all tests'
+      if: | 
+         env.APEX_TESTS == 'all' && env.DEPLOYMENT_TYPE == 'all'
+      run: |
+        sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
+        
+    # Deploy with specified tests run
+    - name : deploy delta changes with specified tests run
+      if: |
+         env.APEX_TESTS != 'all'  &&  env.DEPLOYMENT_TYPE == 'delta'
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+        
+    - name : deploy branch with specified tests run
+      if: |
+          env.APEX_TESTS != 'all'  && env.DEPLOYMENT_TYPE == 'all'
+      run: |
+        sfdx force:source:deploy -p force-app/main/default -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+        
+    # Deploy with All tests run
+    - name : deploy delta changes with all tests run
+      if: |
+         env.APEX_TESTS == 'all' &&  env.DEPLOYMENT_TYPE == 'delta'
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json
+     
+    - name : deploy branch with all tests run
+      if: |
+           env.APEX_TESTS == 'all' && env.DEPLOYMENT_TYPE == 'all'
+      run: |
+        sfdx force:source:deploy -p force-app/main/default -u  $USERNAME --testlevel RunLocalTests  --json           
   
         
     #Check Destructive  
