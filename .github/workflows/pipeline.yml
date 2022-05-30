@@ -89,7 +89,7 @@ jobs:
           
     - name: 'Check-only deploy all branch - run specified tests' 
       if: | 
-         $APEX_TESTS != 'all' && $DEPLOYMENT_TYPE == 'all'
+         env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'all'
       run: |
           sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json 
           
