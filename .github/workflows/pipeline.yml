@@ -73,6 +73,9 @@ jobs:
           sfdx scanner:run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
           cd ..
           
+    - name: 'Scan code with PMD'
+      run: |
+           sfdx scanner:run --target "src" --pmdconfig "/.ci/pmd-apex.xml"        
     # upload the .sarif file 
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v2
