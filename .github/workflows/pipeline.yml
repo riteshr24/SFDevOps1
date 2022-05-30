@@ -85,7 +85,7 @@ jobs:
           env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'delta'
       run: |
           echo ${{env.APEX_TESTS}}
-          sfdx force:source:deploy -p "changed-sources/" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
           
     - name: 'validate branch - run specified tests' 
       if: | 
@@ -98,7 +98,7 @@ jobs:
       if: |
          env.APEX_TESTS == 'all' &&  env.DEPLOYMENT_TYPE == 'delta'
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
+        sfdx force:source:deploy -p "changed-sources/" -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
         
     - name: 'validate branch- run all tests'
       if: | 
