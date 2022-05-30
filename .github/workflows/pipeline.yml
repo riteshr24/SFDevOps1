@@ -20,7 +20,7 @@ env:
   USERNAME : rishu24r_1@gmail.com
   INSTANCE_URL: https://login.salesforce.com
   CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
-  DEPLOYMENT_TYPE : all
+  DEPLOYMENT_TYPE : delta
   
 # Jobs to be executed when the above conditions are met  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -65,7 +65,7 @@ jobs:
     - name: 'Create delta packages for new, modified or deleted metadata'
       run: | 
           mkdir changed-sources
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta  --source force-app/
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/
           
     - name: 'Scan code'
       run: |
