@@ -11,7 +11,7 @@
         <fullName>AML_Failed_To_Schedule_Job</fullName>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>AML Failed To Schedule Job</shortDescription>
+        <shortDescription>AML Failed To Schedule Jobs</shortDescription>
         <value>Failed to schedule AML job.  try again.</value>
     </labels>
     <labels>
