@@ -20,6 +20,7 @@ env:
   USERNAME : rishu24r_1@gmail.com
   INSTANCE_URL: https://login.salesforce.com
   CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
+  DEPLOYMENT_TYPE : delta
   
 # Jobs to be executed when the above conditions are met  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -78,32 +79,58 @@ jobs:
       with:
         sarif_file: changed-sources/apexScanResults.sarif
         
-     #run pre-defined tests
+     # validate with specified  tests
     - name: 'Check-only deploy delta changes - run specified tests'     
-      if: ${{ env.APEX_TESTS != 'all' }}
+      if: |
+          ${{ env.APEX_TESTS != 'all' }} && ${{env.DEPLOYMENT_TYPE == 'delta'}}
       run: |
           echo ${{env.APEX_TESTS}}
-          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json --ignorewarnings
-     
+          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+          
+    - name: 'Check-only deploy all branch - run specified tests' 
+      if: | 
+         ${{ env.APEX_TESTS != 'all' }} && ${{env.DEPLOYMENT_TYPE == 'all'}}
+      run: |
+          sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json 
+          
      # validate with run all local tests
     - name: 'Check-only deploy delta changes - run all tests'
-      if: ${{ env.APEX_TESTS == 'all' }}
+      if: |
+          ${{ env.APEX_TESTS == 'all' }} && ${{env.DEPLOYMENT_TYPE == 'delta'}}
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json --ignorewarnings
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
+        
+    - name: 'Check-only deploy all branch- run all tests'
+      if: | 
+         ${{ env.APEX_TESTS == 'all' }} && ${{env.DEPLOYMENT_TYPE == 'all'}}
+      run: |
+        sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
         
     # Deploy with specified tests run
     - name : deploy delta changes with specified tests run
-      if: ${{ env.APEX_TESTS != 'all' }}
+      if: |
+          ${{ env.APEX_TESTS != 'all' }} && ${{env.DEPLOYMENT_TYPE == 'delta'}}
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json --ignorewarnings
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+        
+    - name : deploy all branch with specified tests run
+      if: |
+          ${{ env.APEX_TESTS != 'all' }} && ${{env.DEPLOYMENT_TYPE == 'all'}}
+      run: |
+        sfdx force:source:deploy -p force-app/main/default -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
         
     # Deploy with All tests run
     - name : deploy delta changes with all tests run
-      if: ${{ env.APEX_TESTS == 'all' }}
+      if: |
+          ${{ env.APEX_TESTS == 'all' }}&& ${{env.DEPLOYMENT_TYPE == 'delta'}}
       run: |
-        sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json --ignorewarnings
-  
-
+        sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json
+     
+    - name : deploy all branch with all tests run
+      if: |
+          ${{ env.APEX_TESTS == 'all' }}&& ${{env.DEPLOYMENT_TYPE == 'all'}}
+      run: |
+        sfdx force:source:deploy -p force-app/main/default -u  $USERNAME --testlevel RunLocalTests  --json   
         
     #Check Destructive  
     - name: 'Check destructive changes (if any)'
@@ -112,5 +139,3 @@ jobs:
     #Deploy Destructive
     - name: 'Deploy destructive changes (if any)'
       run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME --ignorewarnings
-    
-           
