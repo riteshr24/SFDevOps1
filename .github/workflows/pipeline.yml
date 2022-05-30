@@ -96,39 +96,39 @@ jobs:
      # validate with run all local tests
     - name: 'Check-only deploy delta changes - run all tests'
       if: |
-          ${{ env.APEX_TESTS == 'all' }} && ${{env.DEPLOYMENT_TYPE == 'delta'}}
+         env.APEX_TESTS == 'all' &&  env.DEPLOYMENT_TYPE == 'delta'
       run: |
         sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
         
     - name: 'Check-only deploy all branch- run all tests'
       if: | 
-         ${{ env.APEX_TESTS == 'all' }} && ${{env.DEPLOYMENT_TYPE == 'all'}}
+         env.APEX_TESTS == 'all' && env.DEPLOYMENT_TYPE == 'all'
       run: |
         sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
         
     # Deploy with specified tests run
     - name : deploy delta changes with specified tests run
       if: |
-          ${{ env.APEX_TESTS != 'all' }} && ${{env.DEPLOYMENT_TYPE == 'delta'}}
+         env.APEX_TESTS != 'all'  &&  env.DEPLOYMENT_TYPE == 'delta'
       run: |
         sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
         
     - name : deploy all branch with specified tests run
       if: |
-          ${{ env.APEX_TESTS != 'all' }} && ${{env.DEPLOYMENT_TYPE == 'all'}}
+          env.APEX_TESTS != 'all'  && env.DEPLOYMENT_TYPE == 'all'
       run: |
         sfdx force:source:deploy -p force-app/main/default -u $USERNAME --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
         
     # Deploy with All tests run
     - name : deploy delta changes with all tests run
       if: |
-          ${{ env.APEX_TESTS == 'all' }}&& ${{env.DEPLOYMENT_TYPE == 'delta'}}
+         env.APEX_TESTS == 'all' &&  env.DEPLOYMENT_TYPE == 'delta'
       run: |
         sfdx force:source:deploy -p "changed-sources/force-app" -u  $USERNAME --testlevel RunLocalTests  --json
      
     - name : deploy all branch with all tests run
       if: |
-          ${{ env.APEX_TESTS == 'all' }}&& ${{env.DEPLOYMENT_TYPE == 'all'}}
+           env.APEX_TESTS == 'all' && env.DEPLOYMENT_TYPE == 'all'
       run: |
         sfdx force:source:deploy -p force-app/main/default -u  $USERNAME --testlevel RunLocalTests  --json   
         
