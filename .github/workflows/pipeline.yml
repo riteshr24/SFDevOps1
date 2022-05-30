@@ -56,7 +56,7 @@ jobs:
 
   # Install SFDX scanner for static code check
     - name: 'Installing SFDX scanner'
-      run: sfdx plugins:install @salesforce/sfdx-scanner
+      run: sfdx plugins:install @salesforce/sfdx-scanner@3.1.2
 
     # Authorize SF Org
     - name: Authorize SF Org
@@ -70,7 +70,7 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
+          sfdx scanner:run --format sarif --target 'force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
           cd ..
           
     # upload the .sarif file 
