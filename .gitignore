@@ -41,3 +41,6 @@ $RECYCLE.BIN/
 
 retrieved/
 toDeploy/
+
+## yaml ignore
+/.github/workflows
