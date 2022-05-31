@@ -12,10 +12,10 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>AML Failed To Schedule Jobs</shortDescription>
-        <value>Failed to schedule AML jobs.  try again.</value>
+        <value>Failed to schedule AML jobss.  try again.</value>
     </labels>
     <labels>
-        <fullName>AML_Turned_Off</fullName>
+        <fullName>AML_Turned_Offff</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>AML Turned Off</shortDescription>
