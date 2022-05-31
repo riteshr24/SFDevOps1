@@ -3,7 +3,6 @@ name: PR validation pipeline
 
 on:
   pull_request:
-  
     types: [opened, synchronize]
     branches: [ develop, master ]
     
