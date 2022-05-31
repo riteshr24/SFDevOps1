@@ -19,7 +19,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>AML Turned Off</shortDescription>
-        <value>AML Checks are turned OFF. Check with the system admin if they need to be turned ON.</value>
+        <value>AML Checks are turned OFF. Checks with the system admin if they need to be turned ON.</value>
     </labels>
     <labels>
         <fullName>Account_Dashboard_Description</fullName>
