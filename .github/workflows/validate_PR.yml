@@ -5,7 +5,7 @@ on:
   pull_request:
   
     types: [opened, synchronize]
-    branches: [ develop ]
+    branches: [ develop, master ]
     
  # We only care about changes to the force-app directory, which is the
  # root directory of the sfdx project. This prevents the job from running
