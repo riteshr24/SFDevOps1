@@ -15,7 +15,7 @@
         <value>Failed to schedule AML jobss.  try again.</value>
     </labels>
     <labels>
-        <fullName>AML_Turned_Off</fullName>
+        <fullName>AML_Turned_Offff</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>AML Turned Off</shortDescription>
