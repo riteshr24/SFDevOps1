@@ -1,0 +1,114 @@
+
+name: PR validation pipeline
+
+on:
+  pull_request:
+  
+    types: [opened, synchronize]
+    branches: [ develop, master ]
+    
+ # We only care about changes to the force-app directory, which is the
+ # root directory of the sfdx project. This prevents the job from running
+ # when changing non-salesforce files (like this yml file).
+ 
+    paths:
+        - 'force-app/**'
+        
+env:
+  ## Sets environment variable
+  #for APEX_TESTS , specific test classes names can be set up (comma separated). This will enable faster deployments.
+  
+  APEX_TESTS : all
+  USERNAME : rishu24r_1@gmail.com
+  INSTANCE_URL: https://login.salesforce.com
+  CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
+  DEPLOYMENT_TYPE : delta
+  
+# Jobs to be executed when the above conditions are met  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    # Make sure to specify fetch-depth:0. This allows us to
+    # access previous commits that have been pushed to the repository.
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Setup Node
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v3
+      
+    
+    # Install SFDX CLI
+    - name: Install SFDX CLI
+      run: npm install sfdx-cli --global
+      
+    - name: 'Installing sfdx git delta'
+      run: | 
+          echo y | sfdx plugins:install sfdx-git-delta
+          sfdx plugins 
+          
+  # Install SFDX scanner for static code check
+    - name: 'Installing SFDX scanner'
+      run: sfdx plugins:install @salesforce/sfdx-scanner@latest-pilot
+
+    # Authorize SF Org
+    - name: Authorize SF Org
+      run: sfdx force:auth:jwt:grant --clientid $CLIENT_ID --jwtkeyfile ./buildfiles/server.key --username $USERNAME --instanceurl $INSTANCE_URL -a prod
+      
+    - name: 'Create delta packages for new, modified or deleted metadata'
+      run: | 
+          mkdir changed-sources
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/  --generate-delta  --source force-app/
+          
+    - name: 'Scan code'
+      run: |
+          cd changed-sources
+          sfdx scanner:run --format sarif --target 'force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
+          cd ..
+          
+    # upload the .sarif file 
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: changed-sources/apexScanResults.sarif
+        
+      # validate delta with specified  tests
+    - name: 'validate delta changes - run specified tests'     
+      if: |
+          env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'delta'
+      run: |
+          echo ${{env.APEX_TESTS}}
+          sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+          
+    - name: 'validate branch - run specified tests' 
+      if: | 
+         env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'all'
+      run: |
+          sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json 
+          
+     # validate delta with run all local tests
+    - name: 'validate delta changes - run all tests'
+      if: |
+         env.APEX_TESTS == 'all' &&  env.DEPLOYMENT_TYPE == 'delta'
+      run: |
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
+        
+    - name: 'validate branch- run all tests'
+      if: | 
+         env.APEX_TESTS == 'all' && env.DEPLOYMENT_TYPE == 'all'
+      run: |
+        sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunLocalTests  --json 
+                    
+        
+    #Check Destructive  
+    - name: 'Check destructive changes (if any)'
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME --checkonly --ignorewarnings
+    
