@@ -31,6 +31,15 @@ jobs:
     # Setup Node
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
+      
+    # Install SFDX CLI
+    - name: Install SFDX CLI
+      run: npm install sfdx-cli --global
+      
+    - name: 'Installing sfdx git delta'
+      run: | 
+          echo y | sfdx plugins:install sfdx-git-delta
+          sfdx plugins 
           
   # Install SFDX scanner for static code check
     - name: 'Installing SFDX scanner'
