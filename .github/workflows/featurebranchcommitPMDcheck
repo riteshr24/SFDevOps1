@@ -2,7 +2,7 @@ name: PMD check on commits in feature branch
 
 on:
   push:
-    branches: [testfeature]
+    branches: [feat/testfeature]
     
  # We only care about changes to the force-app directory, which is the
  # root directory of the sfdx project. This prevents the job from running
