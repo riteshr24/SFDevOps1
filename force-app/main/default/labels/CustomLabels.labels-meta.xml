@@ -5,7 +5,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>ABN is not active</shortDescription>
-        <value>Your ABN is currently not active. Please &lt;a href=&quot;mailto:enquiries@butn.co&quot;&gt;email&lt;/a&gt; Butn if you believe this to be an error.</value>
+        <value>Your ABN is currentlyyy not active. Please &lt;a href=&quot;mailto:enquiries@butn.co&quot;&gt;email&lt;/a&gt; Butn if you believe this to be an error.</value>
     </labels>
     <labels>
         <fullName>AML_Failed_To_Schedule_Job</fullName>
