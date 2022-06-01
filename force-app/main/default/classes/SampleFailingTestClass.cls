@@ -2,7 +2,7 @@
 public class SampleFailingTestClass {
 
     public static testmethod void failingTest() {
-        Account acc = new Account(Name= 'fred5031212300');
+        Account acc = new Account(Name= 'fred503121230011');
         insert acc;
 
         Account retAccount1 = [select id, phone from Account where id=:acc.id][0];
