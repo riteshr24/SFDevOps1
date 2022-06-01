@@ -1,7 +1,7 @@
 @isTest
 public class SampleDeployClass {
 
-    public static testmethod void t1() {
+    public static testmethod void t2() {
         helloMethod();
 
         Account acc = new Account(Name= 'fred8');
