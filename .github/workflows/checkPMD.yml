@@ -43,7 +43,7 @@ jobs:
           
   # Install SFDX scanner for static code check
     - name: 'Installing SFDX scanner'
-      run: sfdx plugins:install @salesforce/sfdx-scanner
+      run: sfdx plugins:install @salesforce/sfdx-scanner@latest-pilot
       
     - name: 'Create delta packages for new, modified or deleted metadata'
       run: | 
