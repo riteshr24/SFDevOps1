@@ -53,5 +53,5 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format sarif --target '/force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif' --engine "eslint,retire-js,pmd,cpd"  
+          sfdx scanner:run --format sarif --target 'force-app' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
           cd ..
