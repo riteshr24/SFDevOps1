@@ -53,5 +53,5 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format json --target 'changed-sources/force-app' --category "Design,Best Practices,Performance"  
+          sfdx scanner:run --format json --target 'force-app' --category "Design,Best Practices,Performance"  
           cd ..
