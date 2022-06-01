@@ -53,7 +53,7 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format sarif --target 'changed-sources/force-app' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
+          sfdx scanner:run --format sarif --target 'changed-sources/force-app' --category "Design,Best Practices,Performance"  
           cd ..
  # upload the .sarif file 
     - name: Upload SARIF file
