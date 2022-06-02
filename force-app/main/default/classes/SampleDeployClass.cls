@@ -13,7 +13,7 @@ public class SampleDeployClass {
     }
 
     public static String getPhone() {
-        return 'SamplePhone######';
+        return 'SamplePhone######66';
     }
     
     public static void helloMethod() {
