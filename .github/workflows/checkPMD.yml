@@ -53,5 +53,5 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format table --target 'force-app' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd" --outfile "/scripts/apex/hello.csv" 
+          sfdx scanner:run --format csv --target 'force-app' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd" --outfile "/scripts/apex/hello.csv" 
           cd ..
