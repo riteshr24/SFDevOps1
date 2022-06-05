@@ -52,6 +52,6 @@ jobs:
           
     - name: 'Scan code'
       run: |         
-          cd SFDevOps1/scripts/apex/codescanresult.xml
-          sfdx scanner:run --format xml --target 'force-app' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd" --outfile "SFDevOps1/scripts/apex/codescanresult.xml"  
+          cd changed-sources
+          sfdx scanner:run --format xml --target 'force-app' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd"  
           cd ..
