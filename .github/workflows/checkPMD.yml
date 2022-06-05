@@ -53,5 +53,5 @@ jobs:
     - name: 'Scan code'
       run: |         
           cd changed-sources
-          sfdx scanner:run --format xml --target 'force-app' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd"  
+          sfdx scanner:run --format xml --target 'force-app' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd,eslint-lwc"  
           cd ..
