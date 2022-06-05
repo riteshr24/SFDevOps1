@@ -52,5 +52,5 @@ jobs:
           
     - name: 'Scan code'
       run: |
-          sfdx scanner:run --format xml --target './force-app/' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd" 
+          sfdx scanner:run --format xml --target 'force-app' --category "Design,Best Practices,Performance" --engine "eslint,retire-js,pmd" 
            
