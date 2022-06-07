@@ -70,8 +70,9 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format sarif --target 'force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
+          sfdx scanner:run --format sarif --target 'force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'        
           cd ..
+          sfdx scanner:run --format sarif --target './**/*.js' --category "Design,Best Practices,Performance"
           
     # upload the .sarif file 
     - name: Upload SARIF file
@@ -91,7 +92,7 @@ jobs:
       if: | 
          env.APEX_TESTS != 'all' && env.DEPLOYMENT_TYPE == 'all'
       run: |
-          sfdx force:source:deploy -p force-app/main/default -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json 
+          sfdx force:source:deploy -p "force-app/main/default" -u $USERNAME --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json 
           
      # validate with run all local tests
     - name: 'validate delta changes - run all tests'
