@@ -72,6 +72,8 @@ jobs:
           cd changed-sources
           sfdx scanner:run --format sarif --target 'force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
           cd ..
+          sfdx scanner:run --format sarif --target './**/*.js' --category "Design,Best Practices,Performance"
+          
           
     # upload the .sarif file 
     - name: Upload SARIF file
