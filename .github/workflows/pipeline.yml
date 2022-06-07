@@ -69,7 +69,9 @@ jobs:
           
     - name: 'Scan code'
       run: |
-          sfdx scanner:run --format sarif --target 'jest.config.js' --category "Design,Best Practices,Performance"
+          cd changed-sources
+          sfdx scanner:run --format sarif --target 'force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
+          cd ..
           
           
     # upload the .sarif file 
