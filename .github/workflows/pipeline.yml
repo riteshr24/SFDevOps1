@@ -73,9 +73,11 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format sarif --target '**/force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif' --engine "eslint"
+          sfdx scanner:run --format sarif --target '**/force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'
           cd ..
           
+    - name: Run ESLint
+      run: eslint . --ext .js,.jsx,.ts,.tsx          
           
     # upload the .sarif file 
     - name: Upload SARIF file
