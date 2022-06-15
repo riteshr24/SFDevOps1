@@ -70,7 +70,7 @@ jobs:
     - name: 'Scan code'
       run: |
           cd changed-sources
-          sfdx scanner:run --format sarif --target '**/force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'
+          sfdx scanner:run --format sarif --target '**/force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif' --engine "eslint"
           cd ..
           
           
