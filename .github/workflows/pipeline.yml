@@ -25,6 +25,21 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci # or yarn install
+      - uses: sibiraj-s/action-eslint@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Optional
+          eslint-args: '--ignore-path=.gitignore --quiet'
+          extensions: 'js,jsx,ts,tsx'
+          annotations: true
+
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -41,14 +56,6 @@ jobs:
     # Setup Node
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
-      
-    - name: Action ESLint
-    - run: npm ci
-    - uses: sibiraj-s/action-eslint@v2.1.1
-      with:
-          eslint-args: '--ignore-path=.gitignore --quiet'
-          extensions: 'js,jsx,ts,tsx'
-          annotations: true
 
     
     # Install SFDX CLI
