@@ -53,10 +53,9 @@ jobs:
           echo y | sfdx plugins:install sfdx-git-delta
           sfdx plugins 
           
-    - name: Install modules
-      run: yarn
-    - name: Run ESLint
-      run: eslint . --ext .js,.jsx,.ts,.tsx
+    - name: Action ESLint
+      uses: sibiraj-s/action-eslint@v2.1.1
+
 
   # Install SFDX scanner for static code check
     - name: 'Installing SFDX scanner'
@@ -76,10 +75,7 @@ jobs:
           cd changed-sources
           sfdx scanner:run --format sarif --target '**/force-app/**' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'
           cd ..
-          
-    - name: Run ESLint
-      run: eslint . --ext .js,.jsx,.ts,.tsx          
-          
+                          
     # upload the .sarif file 
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v2
