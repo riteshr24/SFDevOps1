@@ -52,10 +52,11 @@ jobs:
       run: | 
           echo y | sfdx plugins:install sfdx-git-delta
           sfdx plugins 
- 
-  # Install java as it is required for the next step
-    - name: 'Installing java'
-      run: sudo apt-get install openjdk-8-jdk
+          
+    - name: Install modules
+      run: yarn
+    - name: Run ESLint
+      run: eslint . --ext .js,.jsx,.ts,.tsx
 
   # Install SFDX scanner for static code check
     - name: 'Installing SFDX scanner'
