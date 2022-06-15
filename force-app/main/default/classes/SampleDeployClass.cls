@@ -7,7 +7,7 @@ public class SampleDeployClass {
         Account acc = new Account(Name= 'fred855rtyyyy5master12only');
         insert acc; // hit the trigger
 
-        // Check that the trigger properly set the phone field:
+        // Check that the trigger properly set the phone fieldsss:
         Account retAcc = [select id, phone from Account where id=:acc.id][0];
         System.assertEquals(getPhone(), retAcc.phone);
     }
