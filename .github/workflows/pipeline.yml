@@ -10,7 +10,8 @@ on:
  # We only care about changes to the force-app directory, which is the
  # root directory of the sfdx project. This prevents the job from running
  # when changing non-salesforce files (like this yml file).
-
+    paths:
+        - 'SFDevOps1/**'
         
 env:
   ## Sets environment variable
@@ -42,6 +43,14 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
       
+    - name: Action ESLint
+    - run: npm ci
+    - uses: sibiraj-s/action-eslint@v2.1.1
+      with:
+          eslint-args: '--ignore-path=.gitignore --quiet'
+          extensions: 'js,jsx,ts,tsx'
+          annotations: true
+
     
     # Install SFDX CLI
     - name: Install SFDX CLI
@@ -51,10 +60,6 @@ jobs:
       run: | 
           echo y | sfdx plugins:install sfdx-git-delta
           sfdx plugins 
-          
-    - name: Action ESLint
-      uses: sibiraj-s/action-eslint@v2.1.1
-
 
   # Install SFDX scanner for static code check
     - name: 'Installing SFDX scanner'
