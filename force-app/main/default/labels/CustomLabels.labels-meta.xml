@@ -5,7 +5,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>ABN is not active</shortDescription>
-        <value>Your ABN is currentlyyy not active.$URL.</value>
+        <value>Your ABN is currentlyyy not active.${{URL}}.</value>
     </labels>
     <labels>
         <fullName>AML_Failed_To_Schedule_Job </fullName>
