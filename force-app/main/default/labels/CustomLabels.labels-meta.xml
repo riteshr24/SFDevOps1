@@ -8,7 +8,7 @@
         <value>Your ABN is currentlyyy not active.$URL.</value>
     </labels>
     <labels>
-        <fullName>AML_Failed_To_Schedule_Job</fullName>
+        <fullName>AML_Failed_To_Schedule_Job </fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>AML Failed To Schedule Jobs</shortDescription>
