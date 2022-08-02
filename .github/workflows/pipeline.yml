@@ -130,7 +130,13 @@ jobs:
       run: |
         sfdx force:source:deploy -p force-app/main/default -u  $USERNAME --testlevel RunLocalTests  --json --wait 99           
   
-        
+           #Check Destructive  
+    - name: 'Check destructive changes (if any)'
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME --checkonly --ignorewarnings
+    
+    #Deploy Destructive
+    - name: 'Deploy destructive changes (if any)'
+      run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" -u  $USERNAME --ignorewarnings 
 
       
   eslint:
