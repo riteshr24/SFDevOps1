@@ -97,7 +97,7 @@ jobs:
          env.APEX_TESTS == 'all' &&  env.DEPLOYMENT_TYPE == 'delta'
       run: |
         sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel RunLocalTests  --json --wait 99
-        
+        sfdx force:source:deploy -p "changed-sources/force-app" -u $USERNAME --checkonly --testlevel NoTestRun  --json --wait 99
     - name: 'validate branch- run all tests'
       if: | 
          env.APEX_TESTS == 'all' && env.DEPLOYMENT_TYPE == 'all'
